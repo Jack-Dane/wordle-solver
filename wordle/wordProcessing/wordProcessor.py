@@ -42,7 +42,7 @@ class WordProcessor:
 
     def _absentLetter(self, letter):
         for word in self._wordList.wordList:
-            if letter in word and not self._alreadyBeforeWord(letter):
+            if letter in word and not self._alreadySeenBeforeInWord(letter):
                 self.wordsToRemove.add(word)
 
     def _correctLetter(self, index, letter):
@@ -54,7 +54,7 @@ class WordProcessor:
                 self.wordsToRemove.add(word)
         self._presentOrCorrectLetters.add(letter)
 
-    def _alreadyBeforeWord(self, letter):
+    def _alreadySeenBeforeInWord(self, letter):
         return letter in self._presentOrCorrectLetters
 
     def _presentLetter(self, index, letter):
