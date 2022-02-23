@@ -13,6 +13,7 @@ class WordProcessor:
         self._guessWord = ""
         self._presentOrCorrectLetters = set()
         self._doubleLetter = set()
+        self._notDoubleLetter = set()
         self.wordsToRemove = set()
         self.totalCorrectLetters = 0
         self._latestResult = None
@@ -35,13 +36,15 @@ class WordProcessor:
         self._doubleLetterCheck()
 
     def _doubleLetterCheck(self):
-        if not self._doubleLetter:
-            return
-
         for word in self._wordList.wordList:
             for letter in self._doubleLetter:
                 if word.count(letter) != 2:
                     self.wordsToRemove.add(word)
+
+            for letter in self._notDoubleLetter:
+                if word.count(letter) == 2:
+                    self.wordsToRemove.add(word)
+        self._notDoubleLetter = set()
         self._doubleLetter = set()
 
     def getNextGuess(self):
@@ -54,6 +57,8 @@ class WordProcessor:
                     self.wordsToRemove.add(word)
                 elif word[index] == letter:
                     self.wordsToRemove.add(word)
+                if self._guessWord.count(letter) > 1:
+                    self._notDoubleLetter.add(letter)
 
     @presentCorrectLetter
     def _correctLetter(self, index, letter):
