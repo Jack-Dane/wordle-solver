@@ -34,5 +34,5 @@ class Wordle:
                 self.guesses += 1
 
     def _runCheat(self):
-        # TODO - either read the code or find a way to print the script
-        raise NotImplementedError
+        correctAnswer = self.driver.getAnswer()
+        self.driver.makeGuess(correctAnswer)
