@@ -21,6 +21,9 @@ class Wordle:
             self._run()
 
     def _run(self):
+        """
+        Run the standard Wordle guessing
+        """
         while not self.correctAnswer and self.guesses < 6:
             self.driver.makeGuess(self.nextGuess)
             results = self.driver.collectResults(self.guesses)
@@ -28,11 +31,15 @@ class Wordle:
             wordProcessor = WordProcessor(self._wordList)
             wordProcessor.processResults(self.nextGuess, results)
             if wordProcessor.totalCorrectLetters == 5:
+                self.guesses += 1
                 self.correctAnswer = True
             else:
                 self.nextGuess = wordProcessor.getNextGuess()
                 self.guesses += 1
 
     def _runCheat(self):
+        """
+        Run wordle but guess the word first time
+        """
         correctAnswer = self.driver.getAnswer()
         self.driver.makeGuess(correctAnswer)
