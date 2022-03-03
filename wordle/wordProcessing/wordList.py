@@ -1,11 +1,8 @@
-
 import random
 
 
 class WordList:
-
-    def __init__(self):
-        self.wordList = {"aahed", "aalii", "aargh", "aarti", "abaca", "abaci", "abacs", "abaft", "abaka", "abamp", "aband",
+    wordList = {"aahed", "aalii", "aargh", "aarti", "abaca", "abaci", "abacs", "abaft", "abaka", "abamp", "aband",
                 "abash", "abask", "abaya", "abbas", "abbed", "abbes", "abcee", "abeam", "abear", "abele", "abers",
                 "abets", "abies", "abler", "ables", "ablet", "ablow", "abmho", "abohm", "aboil", "aboma", "aboon",
                 "abord", "abore", "abram", "abray", "abrim", "abrin", "abris", "absey", "absit", "abuna", "abune",
@@ -1188,7 +1185,7 @@ class WordList:
 
     def removeWord(self, word):
         self.wordList.remove(word)
-    
+
     def nextWord(self):
-        # random might not be the best approach
+        # TODO random might not be the best approach
         return random.sample(self.wordList, 1)[0]

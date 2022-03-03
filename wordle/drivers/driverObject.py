@@ -16,9 +16,11 @@ class DriverObject:
         self.driver = webdriver.Chrome(service=driverService)
         self.driver.get("https://www.powerlanguage.co.uk/wordle/")
         self.closeModalDialog()
+        self.closeCookiesNotification()
 
     def closeModalDialog(self):
         time.sleep(2)
+        # shadow roots mean I have to execute via JS
         self.driver.execute_script(
             "document.querySelector(\"game-app\")"
             ".shadowRoot.querySelector(\"game-modal\")"
@@ -26,6 +28,10 @@ class DriverObject:
             ".click();"
         )
         time.sleep(1)
+
+    def closeCookiesNotification(self):
+        # Thanks NY Times
+        self.driver.find_element(By.ID, "pz-gdpr-btn-accept").click()
 
     def __del__(self):
         self.stop()
