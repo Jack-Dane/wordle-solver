@@ -25,6 +25,9 @@ class WordProcessor:
         self._reduceWordList()
 
     def _checkResults(self):
+        """
+        Check each result object to see then reduce the wordlist
+        """
         for letterResult in self._latestResult:
             if letterResult.result == "absent":
                 self._absentLetter(letterResult.index, letterResult.letter)
@@ -36,6 +39,13 @@ class WordProcessor:
         self._doubleLetterCheck()
 
     def _doubleLetterCheck(self):
+        """
+        Check all words that:
+        1. Have a double letter they shouldn't
+        or
+        2. Don't have a double letter that they should
+        Mark words to remove
+        """
         for word in self._wordList.wordList:
             for letter in self._doubleLetter:
                 if word.count(letter) != 2:
@@ -51,6 +61,11 @@ class WordProcessor:
         return self._wordList.nextWord()
 
     def _absentLetter(self, index, letter):
+        """
+        Process an absent letter
+        :param index: index of the letter in the guess word
+        :param letter: letter to check
+        """
         for word in self._wordList.wordList:
             if letter in word:
                 if not self._alreadySeenBeforeInWord(letter):
@@ -62,25 +77,42 @@ class WordProcessor:
 
     @presentCorrectLetter
     def _correctLetter(self, index, letter):
+        """
+        Process a correct letter
+        :param index: index of the letter in the guess word
+        :param letter: letter to check
+        """
         for word in self._wordList.wordList:
             if word[index] != letter:
+                self.wordsToRemove.add(word)
+
+    @presentCorrectLetter
+    def _presentLetter(self, index, letter):
+        """
+        Process a present letter, correct letter wrong place
+        :param index: index of the letter in the guess word
+        :param letter: letter to check
+        """
+        for word in self._wordList.wordList:
+            if word[index] == letter or letter not in word:
                 self.wordsToRemove.add(word)
 
     def _alreadySeenBeforeInWord(self, letter):
         return letter in self._presentOrCorrectLetters
 
-    @presentCorrectLetter
-    def _presentLetter(self, index, letter):
-        for word in self._wordList.wordList:
-            if word[index] == letter or letter not in word:
-                self.wordsToRemove.add(word)
-
     def _reduceWordList(self):
+        """
+        Remove the words in words to remove from the wordlist
+        """
         self.wordsToRemove.add(self._guessWord)
         for word in self.wordsToRemove:
             self._wordList.removeWord(word)
 
     def addCorrectLetterWordToSet(self, letter):
+        """
+        If the letter is correct or present use this decorator to add it to the set
+        :param letter: letter to be added
+        """
         if letter in self._presentOrCorrectLetters:
             self._doubleLetter.add(letter)
 
