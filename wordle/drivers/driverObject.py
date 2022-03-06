@@ -40,6 +40,10 @@ class DriverObject:
         self.driver.close()
 
     def makeGuess(self, word):
+        """
+        Input the guess into the wordle
+        :param word: the word to guess
+        """
         body = self.driver.find_element(By.XPATH, "//body")
         body.send_keys(word)
         body.send_keys(Keys.RETURN)
@@ -53,6 +57,11 @@ class DriverObject:
         return self._readResults(row)
 
     def _readResults(self, row):
+        """
+        Read the results from the driver, return the results with the correct letters first
+        :param row: The row element of the last guess
+        :return: LetterResult object list
+        """
         result = []
         for index, element in enumerate(
                 row.shadow_root.find_elements(By.CSS_SELECTOR, "game-tile")

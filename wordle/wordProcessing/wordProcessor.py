@@ -19,6 +19,12 @@ class WordProcessor:
         self._latestResult = None
 
     def processResults(self, guessWord, results):
+        """
+        Process the results added and reduce the wordlist
+        :param guessWord: The word that was guessed
+        :param results: An list of LetterResult objects, must be parsed with correct letters first!
+        """
+        # TODO not make it dependent on passing correct letters first
         self._guessWord = guessWord
         self._latestResult = results
         self._checkResults()
