@@ -8,9 +8,9 @@ class Wordle:
 
     def __init__(self, firstGuess=None):
         self.driver = None
-        self.nextGuess = firstGuess or "audio"
         self.guesses = 0
         self._wordList = WordList()
+        self.nextGuess = firstGuess or self._wordList.nextWord()
         self.correctAnswer = False
 
     def start(self, cheat=False):
