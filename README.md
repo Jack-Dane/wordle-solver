@@ -1,4 +1,4 @@
-# worlde-solver
+# wordle-solver
 A web driver application that will solve Wordle. 
 
 ## How to setup
