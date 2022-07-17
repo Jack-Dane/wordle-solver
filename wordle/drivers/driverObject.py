@@ -14,19 +14,17 @@ class DriverObject:
     def __init__(self):
         driverService = Service(executable_path="./wordle/drivers/chromedriver")
         self.driver = webdriver.Chrome(service=driverService)
-        self.driver.get("https://www.powerlanguage.co.uk/wordle/")
-        self.closeModalDialog()
+        self.driver.get("https://www.nytimes.com/games/wordle/index.html")
+        self.driver.maximize_window()
         self.closeCookiesNotification()
+        self.closeModalDialog()
 
     def closeModalDialog(self):
         time.sleep(2)
         # shadow roots mean I have to execute via JS
-        self.driver.execute_script(
-            "document.querySelector(\"game-app\")"
-            ".shadowRoot.querySelector(\"game-modal\")"
-            ".shadowRoot.querySelector(\"game-icon\")"
-            ".click();"
-        )
+        self.driver.find_element(
+            By.XPATH, "//div[@class='Modal-module_closeIcon__b4z74']/*[name()='svg']"
+        ).click()
         time.sleep(1)
 
     def closeCookiesNotification(self):
@@ -50,10 +48,10 @@ class DriverObject:
         time.sleep(2)
 
     def collectResults(self, guessNumber):
-        row = self.driver.execute_script(
-            f"return document.querySelector(\"game-app\")"
-            f".shadowRoot.querySelector(\"game-theme-manager\")"
-            f".querySelectorAll(\"game-row\")[{guessNumber}];")
+        row = self.driver.find_elements(
+            By.CLASS_NAME,
+            "Row-module_row__dEHfN"
+        )[guessNumber]
         return self._readResults(row)
 
     def _readResults(self, row):
@@ -64,10 +62,10 @@ class DriverObject:
         """
         result = []
         for index, element in enumerate(
-                row.shadow_root.find_elements(By.CSS_SELECTOR, "game-tile")
+                row.find_elements(By.CLASS_NAME, "Tile-module_tile__3ayIZ")
         ):
-            evaluation = element.get_attribute("evaluation")
-            letter = element.get_attribute("letter")
+            evaluation = element.get_attribute("data-state")
+            letter = element.text.lower()
             letterResult = LetterResult(letter, evaluation, index)
             if evaluation == "correct":
                 result.insert(0, letterResult)

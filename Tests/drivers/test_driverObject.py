@@ -10,17 +10,17 @@ from wordle.drivers.driverObject import DriverObject
 @patch("wordle.drivers.driverObject.LetterResult")
 class Test_DriverObject__readResults(TestCase):
 
-    def createShadowRoot(self, letter, evaluation):
-        result = MagicMock()
-        result.get_attribute.side_effect = [evaluation, letter]
+    def createWebElement(self, letter, evaluation):
+        result = MagicMock(text=letter)
+        result.get_attribute.return_value = evaluation
         return result
 
     def test_ok(self, LetterResult, webdriver_Chrome, Service):
         row = MagicMock()
-        row.shadow_root.find_elements.return_value = [
-            self.createShadowRoot("b", "present"), self.createShadowRoot("a", "correct"),
-            self.createShadowRoot("c", "absent"), self.createShadowRoot("e", "present"),
-            self.createShadowRoot("f", "correct")
+        row.find_elements.return_value = [
+            self.createWebElement("B", "present"), self.createWebElement("A", "correct"),
+            self.createWebElement("C", "absent"), self.createWebElement("E", "present"),
+            self.createWebElement("F", "correct")
         ]
         driverObject = DriverObject()
 
