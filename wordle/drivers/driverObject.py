@@ -4,7 +4,6 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -33,10 +32,13 @@ class DriverObject:
         closeElement.click()
 
     def closeCookiesNotification(self):
-        acceptCookies = self._waitForElement(
-            (By.ID, "pz-gdpr-btn-accept")
-        )
+        acceptCookies = self._waitForElement((By.ID, "pz-gdpr-btn-accept"))
         acceptCookies.click()
+        # hide the ok popup window, stops us from clicking on the letter keys
+        self._waitForElement((By.CLASS_NAME, "pz-snackbar"))
+        self.driver.execute_script(
+            "document.querySelector('.pz-snackbar').style.display = 'None';"
+        )
 
     def __del__(self):
         self.stop()
@@ -49,15 +51,15 @@ class DriverObject:
         Input the guess into the wordle
         :param word: the word to guess
         """
-        body = self.driver.find_element(By.XPATH, "//body")
-        body.send_keys(word)
-        body.send_keys(Keys.RETURN)
+        for letter in word:
+            letterElement = self.driver.find_element(By.XPATH, f"//button[@data-key='{letter}']")
+            letterElement.click()
+        self.driver.find_element(By.XPATH, "//button[@data-key='\u21B5']").click()
         time.sleep(2)  # wait for the elements to calculate
 
     def collectResults(self, guessNumber):
         row = self.driver.find_elements(
-            By.CLASS_NAME,
-            "Row-module_row__dEHfN"
+            By.CLASS_NAME, "Row-module_row__dEHfN"
         )[guessNumber]
         return self._readResults(row)
 
