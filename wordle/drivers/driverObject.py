@@ -5,6 +5,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from wordle.common.letterResult import LetterResult
 
@@ -19,17 +21,22 @@ class DriverObject:
         self.closeCookiesNotification()
         self.closeModalDialog()
 
+    def _waitForElement(self, selector, timeout=10):
+        return WebDriverWait(self.driver, timeout).until(
+            EC.presence_of_element_located(selector)
+        )
+
     def closeModalDialog(self):
-        time.sleep(2)
-        # shadow roots mean I have to execute via JS
-        self.driver.find_element(
-            By.XPATH, "//div[@class='Modal-module_closeIcon__b4z74']/*[name()='svg']"
-        ).click()
-        time.sleep(1)
+        closeElement = self._waitForElement(
+            (By.XPATH, "//div[@class='Modal-module_closeIcon__b4z74']/*[name()='svg']")
+        )
+        closeElement.click()
 
     def closeCookiesNotification(self):
-        # Thanks NY Times
-        self.driver.find_element(By.ID, "pz-gdpr-btn-accept").click()
+        acceptCookies = self._waitForElement(
+            (By.ID, "pz-gdpr-btn-accept")
+        )
+        acceptCookies.click()
 
     def __del__(self):
         self.stop()
@@ -45,7 +52,7 @@ class DriverObject:
         body = self.driver.find_element(By.XPATH, "//body")
         body.send_keys(word)
         body.send_keys(Keys.RETURN)
-        time.sleep(2)
+        time.sleep(2)  # wait for the elements to calculate
 
     def collectResults(self, guessNumber):
         row = self.driver.find_elements(
