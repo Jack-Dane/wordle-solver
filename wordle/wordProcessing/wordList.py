@@ -1211,13 +1211,20 @@ class RandomFromSample(WordList):
         return random.sample(self.wordList, 1)[0]
 
 
-class Elimination2GuessAlgorithm(WordList):
+class EliminationCommon(WordList, ABC):
+    eliminatedWords = []
+
+    def removeWord(self, word):
+        self.eliminatedWords.append(word)
+
+
+class Elimination2GuessAlgorithm(EliminationCommon):
 
     def nextWord(self):
-        pass
+        return random.sample(self.wordList, 1)[0]
 
 
-class Elimination3GuessAlgorithm(WordList):
+class Elimination3GuessAlgorithm(EliminationCommon):
 
     def nextWord(self):
         pass
