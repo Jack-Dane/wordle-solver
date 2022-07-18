@@ -26,10 +26,15 @@ def main():
         ],
         default=GuessAlgorithm.GENERIC_GUESS_ALGORITHM
     )
+    parser.add_argument(
+        "-LR", "--logResult",
+        help="Log the results to the database",
+        choices=["True", "False"], default="False"
+    )
 
     options = parser.parse_args(sys.argv[1:])
 
-    wordle = Wordle(options.guessingType, firstGuess=options.firstGuess)
+    wordle = Wordle(options.guessingType, options.logResult, firstGuess=options.firstGuess)
     wordle.start(cheat=options.cheat)
 
 
