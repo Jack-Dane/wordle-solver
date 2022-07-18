@@ -6,10 +6,10 @@ from .wordList import WordList
 
 class Wordle:
 
-    def __init__(self, firstGuess=None):
+    def __init__(self, guessingAlgorithm, firstGuess=None):
         self.driver = None
         self.guesses = 0
-        self._wordList = WordList()
+        self._wordList = WordList.getWordlist(guessingAlgorithm)
         self.nextGuess = firstGuess or self._wordList.nextWord()
         self.correctAnswer = False
 

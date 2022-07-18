@@ -3,12 +3,13 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 from wordle.wordProcessing.wordle import Wordle
+from wordle.common.guessAlogrithms import GuessAlgorithm
 
 
 class WordleTest(TestCase):
 
     def setUp(self):
-        self.wordle = Wordle()
+        self.wordle = Wordle(GuessAlgorithm.GENERIC_GUESS_ALGORITHM)
 
 
 @patch("wordle.wordProcessing.wordle.DriverObject")

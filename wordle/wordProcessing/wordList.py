@@ -1,7 +1,11 @@
+
+from abc import ABC, abstractmethod
 import random
 
+from wordle.common.guessAlogrithms import GuessAlgorithm
 
-class WordList:
+
+class WordList(ABC):
     wordList = {"aahed", "aalii", "aargh", "aarti", "abaca", "abaci", "abacs", "abaft", "abaka", "abamp", "aband",
                 "abash", "abask", "abaya", "abbas", "abbed", "abbes", "abcee", "abeam", "abear", "abele", "abers",
                 "abets", "abies", "abler", "ables", "ablet", "ablow", "abmho", "abohm", "aboil", "aboma", "aboon",
@@ -1186,6 +1190,34 @@ class WordList:
     def removeWord(self, word):
         self.wordList.remove(word)
 
+    @staticmethod
+    def getWordlist(guessAlgorithm):
+        if guessAlgorithm == GuessAlgorithm.GENERIC_GUESS_ALGORITHM:
+            return RandomFromSample()
+        elif guessAlgorithm == GuessAlgorithm.ELIMINATION_2_GUESS_ALGORITHM:
+            return Elimination2GuessAlgorithm()
+        elif guessAlgorithm == GuessAlgorithm.ELIMINATION_3_GUESS_ALGORITHM:
+            return Elimination3GuessAlgorithm()
+        raise NotImplementedError
+
+    @abstractmethod
     def nextWord(self):
-        # TODO random might not be the best approach
+        pass
+
+
+class RandomFromSample(WordList):
+
+    def nextWord(self):
         return random.sample(self.wordList, 1)[0]
+
+
+class Elimination2GuessAlgorithm(WordList):
+
+    def nextWord(self):
+        pass
+
+
+class Elimination3GuessAlgorithm(WordList):
+
+    def nextWord(self):
+        pass

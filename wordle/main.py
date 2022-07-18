@@ -3,6 +3,7 @@ import argparse
 import sys
 
 from wordle.wordProcessing.wordle import Wordle
+from wordle.common.guessAlogrithms import GuessAlgorithm
 
 
 def main():
@@ -16,10 +17,19 @@ def main():
         "-FG", "--firstGuess",
         help="Use this value as the first guess"
     )
+    parser.add_argument(
+        "-GT", "--guessingType",
+        help="The guessing type to use",
+        choices=[
+            GuessAlgorithm.GENERIC_GUESS_ALGORITHM, GuessAlgorithm.ELIMINATION_2_GUESS_ALGORITHM,
+            GuessAlgorithm.ELIMINATION_3_GUESS_ALGORITHM
+        ],
+        default=GuessAlgorithm.GENERIC_GUESS_ALGORITHM
+    )
 
     options = parser.parse_args(sys.argv[1:])
 
-    wordle = Wordle(firstGuess=options.firstGuess)
+    wordle = Wordle(options.guessingType, firstGuess=options.firstGuess)
     wordle.start(cheat=options.cheat)
 
 
