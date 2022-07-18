@@ -1213,18 +1213,43 @@ class RandomFromSample(WordList):
 
 class EliminationCommon(WordList, ABC):
     eliminatedWords = []
+    guessCount = 0
+
+    @property
+    @abstractmethod
+    def randomLimit(self):
+        pass
+
+    @property
+    def isFirstGuess(self):
+        return self.guessCount == 1
+
+    @property
+    def isLessThanEliminationCount(self):
+        return self.guessCount <= self.randomLimit
 
     def removeWord(self, word):
-        self.eliminatedWords.append(word)
+        if self.isFirstGuess or not self.isLessThanEliminationCount:
+            super().removeWord(word)
+            self.eliminatedWords.append(word)
+
+    def nextWord(self):
+        self.guessCount += 1
+        if not self.isFirstGuess and self.isLessThanEliminationCount:
+            return random.sample(self.eliminatedWords, 1)[0]
+        else:
+            return random.sample(self.wordList, 1)[0]
 
 
 class Elimination2GuessAlgorithm(EliminationCommon):
 
-    def nextWord(self):
-        return random.sample(self.wordList, 1)[0]
+    @property
+    def randomLimit(self):
+        return 2
 
 
 class Elimination3GuessAlgorithm(EliminationCommon):
 
-    def nextWord(self):
-        pass
+    @property
+    def randomLimit(self):
+        return 3
