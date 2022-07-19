@@ -34,6 +34,9 @@ or
 wordleRun --firstGuess audio
 ```
 
+You can save results to a sqlite database using the `-LR` or `--logResult` argument. You first need
+to run the `createTables` command first to create the database and tables. 
+
 ## WebDriver
 This implementation specifically uses a Chrome webdriver to run wordle solver application, the driver
 in the repository is currently on version 98. If your browser is on another version you can download 
