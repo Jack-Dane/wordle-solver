@@ -9,7 +9,7 @@ from wordle.common.guessAlogrithms import GuessAlgorithm
 class WordleTest(TestCase):
 
     def setUp(self):
-        self.wordle = Wordle(GuessAlgorithm.GENERIC_GUESS_ALGORITHM)
+        self.wordle = Wordle(GuessAlgorithm.GENERIC_GUESS_ALGORITHM, False)
 
 
 @patch("wordle.wordProcessing.wordle.DriverObject")
@@ -55,7 +55,7 @@ class Test_Wordle__run(WordleTest):
 
         self.assertEqual(6, self.wordle.driver.makeGuess.call_count)
         self.assertEqual(6, self.wordle.guesses)
-        self.assertFalse(self.wordle.correctAnswer)
+        self.assertEqual("UNKNOWN", self.wordle.correctAnswer)
 
     def test_correct_on_third_attempt(self, wordProcessor):
         wordProcessor.side_effect = [
