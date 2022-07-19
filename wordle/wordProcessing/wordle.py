@@ -9,12 +9,13 @@ from wordle.models.results import insertResult
 
 class Wordle:
 
-    def __init__(self, guessingAlgorithm, logResults, firstGuess=None):
+    def __init__(self, guessingAlgorithm, logResults, headless, firstGuess=None):
+        self._guessingAlgorithm = guessingAlgorithm
         self._logResults = logResults
+        self._headless = headless
         self._startDateTime = None
         self.driver = None
         self.guesses = 0
-        self._guessingAlgorithm = guessingAlgorithm
         self._wordList = WordList.getWordlist(self._guessingAlgorithm)
         self.nextGuess = firstGuess or self._wordList.nextWord()
         self.correctAnswer = "UNKNOWN"
@@ -22,7 +23,7 @@ class Wordle:
 
     def start(self, cheat=False):
         self._startDateTime = datetime.now()
-        self.driver = DriverObject()
+        self.driver = DriverObject(self._headless)
         if cheat:
             self._runCheat()
         else:

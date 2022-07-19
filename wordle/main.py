@@ -27,13 +27,17 @@ def main():
         default=GuessAlgorithm.GENERIC_GUESS_ALGORITHM
     )
     parser.add_argument(
-        "-LT", "--logResult", action="store_true",
+        "-LR", "--logResult", action="store_true",
         help="Log the results to the database"
+    )
+    parser.add_argument(
+        "--headless", action="store_true",
+        help="Run without visible Chrome window"
     )
 
     options = parser.parse_args(sys.argv[1:])
 
-    wordle = Wordle(options.guessingType, options.logResult, firstGuess=options.firstGuess)
+    wordle = Wordle(options.guessingType, options.logResult, options.headless, firstGuess=options.firstGuess)
     wordle.start(cheat=options.cheat)
 
 

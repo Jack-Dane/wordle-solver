@@ -6,15 +6,19 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 from wordle.common.letterResult import LetterResult
 
 
 class DriverObject:
 
-    def __init__(self):
+    def __init__(self, headless):
+        chromeOptions = Options()
+        if headless:
+            chromeOptions.add_argument("--headless")
         driverService = Service(executable_path="./wordle/drivers/chromedriver")
-        self.driver = webdriver.Chrome(service=driverService)
+        self.driver = webdriver.Chrome(service=driverService, options=chromeOptions)
         self.driver.get("https://www.nytimes.com/games/wordle/index.html")
         self.driver.maximize_window()
         self.closeCookiesNotification()
