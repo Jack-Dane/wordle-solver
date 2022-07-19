@@ -14,7 +14,6 @@ class Result(Base):
     __tablename__ = "Result"
 
     id = Column(Integer, primary_key=True)
-    correct = Column(Boolean)
     numberOfGuesses = Column(Integer)
     algorithmType = Column(String)
     runDateTime = Column(DateTime)
@@ -22,10 +21,10 @@ class Result(Base):
     correctAnswer = Column(String)
 
 
-def insertResult(correct, numberOfGuesses, guessingAlgorithm, runDateTime, firstGuess, correctAnswer):
+def insertResult(numberOfGuesses, guessingAlgorithm, runDateTime, firstGuess, correctAnswer):
     with Session(getEngine()) as session:
         result = Result(
-            correct=correct, numberOfGuesses=numberOfGuesses, algorithmType=guessingAlgorithm,
+            numberOfGuesses=numberOfGuesses, algorithmType=guessingAlgorithm,
             runDateTime=runDateTime, firstGuess=firstGuess, correctAnswer=correctAnswer
         )
 

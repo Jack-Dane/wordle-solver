@@ -17,7 +17,7 @@ class Wordle:
         self._guessingAlgorithm = guessingAlgorithm
         self._wordList = WordList.getWordlist(self._guessingAlgorithm)
         self.nextGuess = firstGuess or self._wordList.nextWord()
-        self.correctAnswer = False
+        self.correctAnswer = "UNKNOWN"
         self._firstGuess = None
 
     def start(self, cheat=False):
@@ -32,7 +32,7 @@ class Wordle:
         """
         Run the standard Wordle guessing
         """
-        while not self.correctAnswer and self.guesses < 6:
+        while self.correctAnswer == "UNKNOWN" and self.guesses < 6:
             self.driver.makeGuess(self.nextGuess)
             if not self._firstGuess:
                 self._firstGuess = self.nextGuess
@@ -42,7 +42,7 @@ class Wordle:
             wordProcessor.processResults(self.nextGuess, results)
             if wordProcessor.totalCorrectLetters == 5:
                 self.guesses += 1
-                self.correctAnswer = True
+                self.correctAnswer = self.nextGuess
             else:
                 self.nextGuess = wordProcessor.getNextGuess()
                 self.guesses += 1
@@ -50,10 +50,9 @@ class Wordle:
             self._captureResults()
 
     def _captureResults(self):
-        correctAnswer = self.nextGuess if self.correctAnswer else "UNKNOWN"
         insertResult(
-            self.correctAnswer, self.guesses, self._guessingAlgorithm, self._startDateTime,
-            self._firstGuess, correctAnswer
+            self.guesses, self._guessingAlgorithm, self._startDateTime,
+            self._firstGuess, self.correctAnswer
         )
 
     def _runCheat(self):
