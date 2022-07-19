@@ -27,9 +27,8 @@ def main():
         default=GuessAlgorithm.GENERIC_GUESS_ALGORITHM
     )
     parser.add_argument(
-        "-LR", "--logResult",
-        help="Log the results to the database",
-        choices=["True", "False"], default="False"
+        "-LT", "--logResult", action="store_true",
+        help="Log the results to the database"
     )
 
     options = parser.parse_args(sys.argv[1:])
