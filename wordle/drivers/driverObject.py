@@ -13,11 +13,11 @@ from wordle.common.letterResult import LetterResult
 
 class DriverObject:
 
-    def __init__(self, headless):
+    def __init__(self, headless, chromeDriverPath="./wordle/drivers/chromedriver"):
         chromeOptions = Options()
         if headless:
             chromeOptions.add_argument("--headless")
-        driverService = Service(executable_path="./wordle/drivers/chromedriver")
+        driverService = Service(executable_path=chromeDriverPath)
         self.driver = webdriver.Chrome(service=driverService, options=chromeOptions)
         self.driver.get("https://www.nytimes.com/games/wordle/index.html")
         self.driver.maximize_window()

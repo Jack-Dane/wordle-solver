@@ -9,10 +9,9 @@ from wordle.models.results import insertResult
 
 class Wordle:
 
-    def __init__(self, guessingAlgorithm, logResults, headless, firstGuess=None):
+    def __init__(self, guessingAlgorithm, logResults, firstGuess=None):
         self._guessingAlgorithm = guessingAlgorithm
         self._logResults = logResults
-        self._headless = headless
         self._startDateTime = None
         self.driver = None
         self.guesses = 0
@@ -21,9 +20,9 @@ class Wordle:
         self.correctAnswer = "UNKNOWN"
         self._firstGuess = None
 
-    def start(self, cheat=False):
+    def start(self, headless, cheat=False, chromeDriverPath=None):
         self._startDateTime = datetime.now()
-        self.driver = DriverObject(self._headless)
+        self.driver = DriverObject(headless, chromeDriverPath=chromeDriverPath)
         if cheat:
             self._runCheat()
         else:
