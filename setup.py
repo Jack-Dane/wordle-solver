@@ -6,6 +6,7 @@ setup(
     install_requires=[
         "selenium",
         "sqlalchemy",
+        "docker",
     ],
     packages=find_packages(),
     entry_points={

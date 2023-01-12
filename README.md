@@ -15,12 +15,12 @@ a wordlist based on the results of the words guessed.
 
 To start wordle solver with a cheat method:
 ```
-worldRun -c
+wordleRun -c
 ```
 
 To start the method without the cheat mode:
 ```
-worldRun
+wordleRsun
 ```
 
 This will run the wordle with a random word from the wordlist. You can add another argument onto
