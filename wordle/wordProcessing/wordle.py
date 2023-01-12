@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from wordle.wordProcessing.wordProcessor import WordProcessor
-from wordle.drivers.driverObject import DriverObject
+from wordle.drivers.driverObject import ChromeDriverDocker
 from wordle.wordProcessing.wordList import WordList
 from wordle.models.results import insertResult
 
@@ -22,7 +22,7 @@ class Wordle:
 
     def start(self, headless, cheat=False, chromeDriverPath=None):
         self._startDateTime = datetime.now()
-        self.driver = DriverObject(headless, chromeDriverPath=chromeDriverPath)
+        self.driver = ChromeDriverDocker(headless)
         if cheat:
             self._runCheat()
         else:
