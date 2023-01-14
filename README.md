@@ -6,7 +6,7 @@ A web driver application that will solve Wordle.
 2. Change into the created directory `cd wordle-solver`
 3. Create a new virtual environment for the project `python3 -m venv venv`
 4. Use the new created virtual environment `source venv/bin/activate`
-5. Install the setup.py file `python3 setup.py install`
+5. Install the relevant packages `pip install -e .`
 
 ## How to run
 There are two modes which can be run, one mode is a cheat mode which will get the correct 
@@ -38,7 +38,8 @@ You can save results to a sqlite database using the `-LR` or `--logResult` argum
 to run the `createTables` command first to create the database and tables. 
 
 ## WebDriver
-This implementation specifically uses a Chrome webdriver to run wordle solver application, the driver
-in the repository is currently on version 98. If your browser is on another version you can download 
-other version from https://chromedriver.chromium.org/home and replace the file `world-solve/drivers/chromedriver`
-with the new driver you downloaded. 
+The application creates a selenium container with a chrome browser installed. It would be better to first pull this image: 
+`docker pull selenium/standalone-chrome`
+
+## Prerequisite
+1. That docker is installed onto the system you are trying to run the wordle solver on.
