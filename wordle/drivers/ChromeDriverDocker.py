@@ -116,11 +116,6 @@ class _ChromeDriver:
                 result.append(letterResult)
         return result
 
-    def getAnswer(self):
-        return self.driver.execute_script(
-            "return JSON.parse(localStorage.getItem(\"nyt-wordle-state\"))[\"solution\"];"
-        )
-
 
 class ChromeDriverDocker(_ChromeDriver):
 

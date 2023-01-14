@@ -1,5 +1,7 @@
 
+import requests
 from datetime import datetime
+from datetime import date
 
 from wordle.wordProcessing.wordProcessor import WordProcessor
 from wordle.drivers.ChromeDriverDocker import ChromeDriverDocker
@@ -59,5 +61,7 @@ class Wordle:
         """
         Run wordle but guess the word first time
         """
-        correctAnswer = self.driver.getAnswer()
+        solutionURL = f"https://www.nytimes.com/svc/wordle/v2/{date.today()}.json"
+        response = requests.get(solutionURL)
+        correctAnswer = response.json()["solution"]
         self.driver.makeGuess(correctAnswer)
