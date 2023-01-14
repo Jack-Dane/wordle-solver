@@ -1,15 +1,18 @@
 
 from abc import ABC, abstractmethod
+import os
 import random
 
 from wordle.common.guessAlogrithms import GuessAlgorithm
+from wordle import ROOT_DIR
 
 
 class WordList(ABC):
 
     def __init__(self):
         self.wordList = set()
-        with open("wordleList.txt", "r") as wordList:
+        wordListFile = os.path.join(ROOT_DIR, "wordProcessing/wordleList.txt")
+        with open(wordListFile, "r") as wordList:
             for word in wordList:
                 self.wordList.add(word.strip())
 

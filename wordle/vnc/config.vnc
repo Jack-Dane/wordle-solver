@@ -1,0 +1,4 @@
+[Connection]
+Host=localhost
+Port=5900
+Password=secret
