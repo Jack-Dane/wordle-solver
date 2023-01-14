@@ -37,9 +37,17 @@ wordleRun --firstGuess audio
 You can save results to a sqlite database using the `-LR` or `--logResult` argument. You first need
 to run the `createTables` command first to create the database and tables. 
 
+You can also run with a VNC viewer argument for your machine to automatically open a window to view the Chrome application running. 
+```
+wordleRun --VNC
+```
+You could also view from a browser `http://localhost:7900/?autoconnect=1&resize=scale&password=secret` when running. It may take a couple of seconds after running 
+the command for the page to be accessible. 
+
 ## WebDriver
 The application creates a selenium container with a chrome browser installed. It would be better to first pull this image: 
-`docker pull selenium/standalone-chrome`
+`docker pull selenium/standalone-chrome`.
 
 ## Prerequisite
 1. That docker is installed onto the system you are trying to run the wordle solver on.
+2. If running with the VNC viewer option, the application expects that [vinagre](https://linux.die.net/man/1/vinagre) is installed on your machine. 

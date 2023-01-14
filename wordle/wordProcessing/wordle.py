@@ -22,9 +22,9 @@ class Wordle:
         self.correctAnswer = "UNKNOWN"
         self._firstGuess = None
 
-    def start(self, headless, cheat=False):
+    def start(self, headless, cheat=False, vnc=False):
         self._startDateTime = datetime.now()
-        self.driver = ChromeDriverDocker(headless)
+        self.driver = ChromeDriverDocker(headless, vnc)
         if cheat:
             self._runCheat()
         else:
@@ -50,6 +50,7 @@ class Wordle:
                 self.guesses += 1
         if self._logResults:
             self._captureResults()
+        self.driver.kill()
 
     def _captureResults(self):
         insertResult(

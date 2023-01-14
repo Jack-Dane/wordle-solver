@@ -1,4 +1,5 @@
 
+import subprocess
 import time
 
 import docker
@@ -9,6 +10,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 from wordle.common.letterResult import LetterResult
+
+
+class _VNCViewer:
+
+    def __init__(self):
+        self._process = subprocess.Popen(
+            ["vinagre", "localhost:0"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+
+    def kill(self):
+        self._process.kill()
 
 
 class _SeleniumDocker:
@@ -45,6 +57,7 @@ class _SeleniumDocker:
             return
 
         self._container.remove(force=True)
+        self._container = None
 
     def __del__(self):
         self.remove()
@@ -119,9 +132,16 @@ class _ChromeDriver:
 
 class ChromeDriverDocker(_ChromeDriver):
 
-    def __init__(self, headless):
+    def __init__(self, headless, vnc):
         self._seleniumDocker = _SeleniumDocker()
         self._seleniumDocker.createContainer()
         # TODO: poll to see if it can connect
         time.sleep(10)
+        if vnc:
+            self._vnc = _VNCViewer()
         super().__init__(headless, self._seleniumDocker)
+
+    def kill(self):
+        # cleanup running processes
+        self._vnc.kill()
+        self._seleniumDocker.remove()

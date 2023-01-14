@@ -34,11 +34,15 @@ def main():
         "--headless", action="store_true",
         help="Run without visible Chrome window"
     )
+    parser.add_argument(
+        "--VNC", action="store_true",
+        help="Open an automatically connected VNC window"
+    )
 
     options = parser.parse_args(sys.argv[1:])
 
     wordle = Wordle(options.guessingType, options.logResult, firstGuess=options.firstGuess)
-    wordle.start(options.headless, cheat=options.cheat)
+    wordle.start(options.headless, cheat=options.cheat, vnc=options.VNC)
 
 
 if __name__ == "__main__":
