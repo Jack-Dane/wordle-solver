@@ -22,7 +22,7 @@ class Wordle:
         self.correctAnswer = "UNKNOWN"
         self._firstGuess = None
 
-    def start(self, headless, cheat=False, chromeDriverPath=None):
+    def start(self, headless, cheat=False):
         self._startDateTime = datetime.now()
         self.driver = ChromeDriverDocker(headless)
         if cheat:

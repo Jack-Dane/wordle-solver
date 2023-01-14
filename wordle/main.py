@@ -34,15 +34,11 @@ def main():
         "--headless", action="store_true",
         help="Run without visible Chrome window"
     )
-    parser.add_argument(
-        "-CDP", "--chromeDriverPath",
-        help="Set a custom driver"
-    )
 
     options = parser.parse_args(sys.argv[1:])
 
     wordle = Wordle(options.guessingType, options.logResult, firstGuess=options.firstGuess)
-    wordle.start(options.headless, cheat=options.cheat, chromeDriverPath=options.chromeDriverPath)
+    wordle.start(options.headless, cheat=options.cheat)
 
 
 if __name__ == "__main__":
