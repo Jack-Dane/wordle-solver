@@ -2,7 +2,7 @@
 from datetime import datetime
 
 from wordle.wordProcessing.wordProcessor import WordProcessor
-from wordle.drivers.driverObject import ChromeDriverDocker
+from wordle.drivers.ChromeDriverDocker import ChromeDriverDocker
 from wordle.wordProcessing.wordList import WordList
 from wordle.models.results import insertResult
 

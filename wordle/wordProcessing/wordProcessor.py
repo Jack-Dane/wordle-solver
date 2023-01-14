@@ -89,8 +89,13 @@ class WordProcessor:
         :param letter: letter to check
         """
         for word in self._wordList.wordList:
-            if word[index] != letter:
-                self.wordsToRemove.add(word)
+            try:
+                if word[index] != letter:
+                    self.wordsToRemove.add(word)
+            except IndexError:
+                print(index)
+                print(word)
+                raise
 
     @presentCorrectLetter
     def _presentLetter(self, index, letter):
