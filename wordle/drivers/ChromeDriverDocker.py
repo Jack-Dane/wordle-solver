@@ -73,11 +73,17 @@ class _ChromeDriver:
         )
 
     def closeModalDialog(self):
-        self._waitForElement(
-            (By.XPATH, "//button[@class='Modal-module_closeIcon__TcEKb']/*[name()='svg']")
-        ).click()
-        # TODO: wait for the modal dialog to disappear
-        time.sleep(5)
+        modalDialogXpath = "//button[@class='Modal-module_closeIcon__TcEKb']/*[name()='svg']"
+        self._waitForElement((By.XPATH, modalDialogXpath)).click()
+
+        timeout = 10
+        attempt = 0
+        while attempt < timeout:
+            if not self.driver.find_elements(By.XPATH, modalDialogXpath):
+                break
+
+            attempt += 1
+            time.sleep(.5)
 
     def closeCookiesNotification(self):
         self._waitForElement((By.ID, "pz-gdpr-btn-accept")).click()
