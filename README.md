@@ -15,12 +15,12 @@ a wordlist based on the results of the words guessed.
 
 To start wordle solver with a cheat method:
 ```
-wordleRun -c
+wordleRun -C
 ```
 
 To start the method without the cheat mode:
 ```
-wordleRsun
+wordleRun
 ```
 
 This will run the wordle with a random word from the wordlist. You can add another argument onto
@@ -43,6 +43,8 @@ wordleRun --VNC
 ```
 You could also view from a browser `http://localhost:7900/?autoconnect=1&resize=scale&password=secret` when running. It may take a couple of seconds after running 
 the command for the page to be accessible. 
+
+Use `wordleRun --help` to see all commands.
 
 ## WebDriver
 The application creates a selenium container with a chrome browser installed. It would be better to first pull this image: 

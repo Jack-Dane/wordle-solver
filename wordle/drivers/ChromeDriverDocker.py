@@ -14,6 +14,10 @@ from wordle.common.letterResult import LetterResult
 from wordle.vnc.VNCViewer import VNCViewer
 
 
+class FailedToStartSeleniumException(Exception):
+    pass
+
+
 class _SeleniumDocker:
     _SELENIUM_IMAGE_NAME = "selenium/standalone-chrome"
 
@@ -60,6 +64,10 @@ class _SeleniumDocker:
                 pass
             attempt += 1
             time.sleep(.5)
+        else:
+            raise FailedToStartSeleniumException(
+                "Selenium failed to start in container after 10 seconds"
+            )
 
     def remove(self):
         if not self._container:
@@ -80,6 +88,8 @@ class _ChromeDriver:
             f"http://{driverContainer.host}:{driverContainer.driverPort}/wd/hub",
             options=chromeOptions
         )
+
+    def start(self):
         self.driver.get("https://www.nytimes.com/games/wordle/index.html")
         self.driver.maximize_window()
         self.closeCookiesNotification()
@@ -132,17 +142,20 @@ class _ChromeDriver:
         """
         result = []
         for index in range(guessNumber * 5, guessNumber * 5 + 5):
-            element = self.driver.find_elements(
-                By.XPATH, f"//div[@class='Tile-module_tile__UWEHN']"
-            )[index]
-            # example ariel-label = "e correct"
-            letter, evaluation = element.get_attribute("aria-label").split(" ")
+            letter, evaluation = self._getEvaluation(index)
             letterResult = LetterResult(letter, evaluation, index % 5)
             if evaluation == "correct":
                 result.insert(0, letterResult)
             else:
                 result.append(letterResult)
         return result
+
+    def _getEvaluation(self, index):
+        element = self.driver.find_elements(
+            By.XPATH, f"//div[@class='Tile-module_tile__UWEHN']"
+        )[index]
+        # example ariel-label = "e correct"
+        return element.get_attribute("aria-label").split(" ")
 
 
 class ChromeDriverDocker(_ChromeDriver):
@@ -153,8 +166,10 @@ class ChromeDriverDocker(_ChromeDriver):
         if vnc:
             self._vnc = VNCViewer()
         super().__init__(self._seleniumDocker)
+        self.start()
 
     def kill(self):
-        # cleanup running processes
+        """ clean up processes created by this object
+        """
         self._vnc.kill()
         self._seleniumDocker.remove()
