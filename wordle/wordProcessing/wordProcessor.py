@@ -8,27 +8,29 @@ def presentCorrectLetter(presentCorrectFunc):
 
 class WordProcessor:
 
-    def __init__(self, wordList):
+    def __init__(self, wordList, results):
         self._wordList = wordList
         self._guessWord = ""
         self._presentOrCorrectLetters = set()
         self._doubleLetter = set()
         self._notDoubleLetter = set()
         self.wordsToRemove = set()
-        self.totalCorrectLetters = 0
-        self._latestResult = None
+        self._latestResult = results
 
-    def processResults(self, guessWord, results):
+    def processResults(self, guessWord):
         """
         Process the results added and reduce the wordlist
         :param guessWord: The word that was guessed
-        :param results: An list of LetterResult objects, must be parsed with correct letters first!
         """
         # TODO not make it dependent on passing correct letters first
         self._guessWord = guessWord
-        self._latestResult = results
         self._checkResults()
         self._reduceWordList()
+
+    def checkWon(self):
+        return len(
+            [letterResult for letterResult in self._latestResult if letterResult.result == "correct"]
+        ) == len(self._latestResult)
 
     def _checkResults(self):
         """
@@ -40,7 +42,6 @@ class WordProcessor:
             elif letterResult.result == "present":
                 self._presentLetter(letterResult.index, letterResult.letter)
             else:
-                self.totalCorrectLetters += 1
                 self._correctLetter(letterResult.index, letterResult.letter)
         self._doubleLetterCheck()
 
