@@ -8,6 +8,9 @@ A web driver application that will solve Wordle.
 4. Use the new created virtual environment `source venv/bin/activate`
 5. Install the relevant packages `pip install -e .`
 
+## Example
+![Wordle](assets/wordle.gif)
+
 ## How to run
 There are two modes which can be run, one mode is a cheat mode which will get the correct 
 answer straight away. The other way will work out the correct answer by reading the reducing 
