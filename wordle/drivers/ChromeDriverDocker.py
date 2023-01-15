@@ -117,7 +117,9 @@ class _ChromeDriver:
         :param word: the word to guess
         """
         for letter in word:
-            letterElement = self.driver.find_element(By.XPATH, f"//button[@data-key='{letter}']")
+            letterElement = self.driver.find_element(
+                By.XPATH, f"//button[@data-key='{letter}']"
+            )
             letterElement.click()
         self.driver.find_element(By.XPATH, "//button[@data-key='\u21B5']").click()
         time.sleep(2)  # wait for the elements to calculate
@@ -125,7 +127,7 @@ class _ChromeDriver:
     def collectResults(self, guessNumber):
         """
         Read the results from the driver, return the results with the correct letters first
-        :param row: The row element of the last guess
+        :param guessNumber: The number of guesses that has now been made
         :return: LetterResult object list
         """
         result = []

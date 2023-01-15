@@ -12,7 +12,7 @@ class WordleTest(TestCase):
         self.wordle = Wordle(GuessAlgorithm.GENERIC_GUESS_ALGORITHM, False)
 
 
-@patch("wordle.wordProcessing.wordle.DriverObject")
+@patch("wordle.wordProcessing.wordle.ChromeDriverDocker")
 class Test_Wordle_start(WordleTest):
 
     def setUp(self):
@@ -20,17 +20,27 @@ class Test_Wordle_start(WordleTest):
         self.wordle._run = MagicMock()
         self.wordle._runCheat = MagicMock()
 
-    def test_standard_start(self, driverObject):
+    def test_standard_start(self, ChromeDriverDocker):
         self.wordle.start()
 
         self.wordle._run.assert_called_once_with()
         self.wordle._runCheat.assert_not_called()
+        ChromeDriverDocker.return_value.kill.assert_called_once_with()
 
-    def test_cheat_start(self, driverObject):
+    def test_cheat_start(self, ChromeDriverDocker):
         self.wordle.start(cheat=True)
 
         self.wordle._runCheat.assert_called_once_with()
         self.wordle._run.assert_not_called()
+        ChromeDriverDocker.return_value.kill.assert_called_once_with()
+
+    def test_exception(self, ChromeDriverDocker):
+        self.wordle._run.side_effect = Exception("Boom!")
+
+        with self.assertRaises(Exception):
+            self.wordle.start()
+
+        ChromeDriverDocker.return_value.kill.assert_called_once_with()
 
 
 @patch("wordle.wordProcessing.wordle.WordProcessor")
@@ -71,15 +81,24 @@ class Test_Wordle__run(WordleTest):
         self.assertTrue(self.wordle.correctAnswer)
 
 
+@patch("wordle.wordProcessing.wordle.date")
+@patch("wordle.wordProcessing.wordle.requests")
 class Test_Wordle__runCheat(WordleTest):
 
     def setUp(self):
         super(Test_Wordle__runCheat, self).setUp()
         self.wordle.driver = MagicMock()
 
-    def test_ok(self):
-        self.wordle.driver.getAnswer.return_value = "chant"
+    def test_ok(self, requests, date):
+        requests.get.return_value = MagicMock()
+        requests.get.return_value.json.return_value = {
+            "solution": "chant"
+        }
+        date.today.return_value = "2023-01-15"
 
         self.wordle._runCheat()
 
         self.wordle.driver.makeGuess.assert_called_once_with("chant")
+        requests.get.assert_called_once_with(
+            "https://www.nytimes.com/svc/wordle/v2/2023-01-15.json"
+        )
