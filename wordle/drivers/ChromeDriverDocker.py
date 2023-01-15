@@ -2,6 +2,8 @@
 import time
 
 import docker
+import requests
+from requests.exceptions import ConnectionError
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -29,7 +31,11 @@ class _SeleniumDocker:
     def host(self):
         return self._host
 
-    def createContainer(self):
+    def run(self):
+        self._createContainer()
+        self._waitForSelenium()
+
+    def _createContainer(self):
         self._container = self._client.containers.run(
             self._SELENIUM_IMAGE_NAME,
             ports={
@@ -40,6 +46,20 @@ class _SeleniumDocker:
             detach=True,
             shm_size="2g"
         )
+
+    def _waitForSelenium(self):
+        timeout = 20
+        attempt = 0
+        while attempt < timeout:
+            try:
+                response = requests.get("http://localhost:4444/wd/hub/status")
+                if response.json().get("value", {}).get("ready"):
+                    return
+            except ConnectionError:
+                # Selenium hasn't started yet
+                pass
+            attempt += 1
+            time.sleep(.5)
 
     def remove(self):
         if not self._container:
@@ -129,9 +149,7 @@ class ChromeDriverDocker(_ChromeDriver):
 
     def __init__(self, headless, vnc):
         self._seleniumDocker = _SeleniumDocker()
-        self._seleniumDocker.createContainer()
-        # TODO: poll to see if it can connect
-        time.sleep(10)
+        self._seleniumDocker.run()
         if vnc:
             self._vnc = VNCViewer()
         super().__init__(headless, self._seleniumDocker)

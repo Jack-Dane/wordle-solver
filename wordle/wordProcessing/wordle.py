@@ -1,7 +1,8 @@
 
-import requests
 from datetime import datetime
 from datetime import date
+
+import requests
 
 from wordle.wordProcessing.wordProcessor import WordProcessor
 from wordle.drivers.ChromeDriverDocker import ChromeDriverDocker

@@ -7,6 +7,7 @@ setup(
         "selenium",
         "sqlalchemy",
         "docker",
+        "requests",
     ],
     packages=find_packages(),
     entry_points={
