@@ -25,10 +25,13 @@ class Wordle:
     def start(self, headless, cheat=False, vnc=False):
         self._startDateTime = datetime.now()
         self.driver = ChromeDriverDocker(headless, vnc)
-        if cheat:
-            self._runCheat()
-        else:
-            self._run()
+        try:
+            if cheat:
+                self._runCheat()
+            else:
+                self._run()
+        finally:
+            self.driver.kill()
 
     def _run(self):
         """
@@ -50,7 +53,6 @@ class Wordle:
                 self.guesses += 1
         if self._logResults:
             self._captureResults()
-        self.driver.kill()
 
     def _captureResults(self):
         insertResult(
