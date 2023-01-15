@@ -23,9 +23,9 @@ class Wordle:
         self.correctAnswer = "UNKNOWN"
         self._firstGuess = None
 
-    def start(self, headless, cheat=False, vnc=False):
+    def start(self, cheat=False, vnc=False):
         self._startDateTime = datetime.now()
-        self.driver = ChromeDriverDocker(headless, vnc)
+        self.driver = ChromeDriverDocker(vnc)
         try:
             if cheat:
                 self._runCheat()

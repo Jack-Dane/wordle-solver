@@ -74,10 +74,8 @@ class _SeleniumDocker:
 
 class _ChromeDriver:
 
-    def __init__(self, headless, driverContainer):
+    def __init__(self, driverContainer):
         chromeOptions = Options()
-        if headless:
-            chromeOptions.add_argument("--headless")
         self.driver = webdriver.Remote(
             f"http://{driverContainer.host}:{driverContainer.driverPort}/wd/hub",
             options=chromeOptions
@@ -147,12 +145,12 @@ class _ChromeDriver:
 
 class ChromeDriverDocker(_ChromeDriver):
 
-    def __init__(self, headless, vnc):
+    def __init__(self, vnc):
         self._seleniumDocker = _SeleniumDocker()
         self._seleniumDocker.run()
         if vnc:
             self._vnc = VNCViewer()
-        super().__init__(headless, self._seleniumDocker)
+        super().__init__(self._seleniumDocker)
 
     def kill(self):
         # cleanup running processes
