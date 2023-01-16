@@ -15,7 +15,7 @@ class WordProcessor:
         self._doubleLetter = set()
         self._notDoubleLetter = set()
         self.wordsToRemove = set()
-        self._latestResult = results
+        self._results = results
 
     def processResults(self, guessWord):
         """
@@ -29,14 +29,14 @@ class WordProcessor:
 
     def checkWon(self):
         return len(
-            [letterResult for letterResult in self._latestResult if letterResult.result == "correct"]
-        ) == len(self._latestResult)
+            [letterResult for letterResult in self._results if letterResult.result == "correct"]
+        ) == len(self._results)
 
     def _checkResults(self):
         """
         Check each result object to see then reduce the wordlist
         """
-        for letterResult in self._latestResult:
+        for letterResult in self._results:
             if letterResult.result == "absent":
                 self._absentLetter(letterResult.index, letterResult.letter)
             elif letterResult.result == "present":

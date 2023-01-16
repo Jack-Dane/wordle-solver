@@ -9,7 +9,7 @@ class WordProcessorTests(TestCase):
 
     def setUp(self):
         self.wordList = MagicMock(wordList=["apple", "juice", "uncle"])
-        self.wordProcessor = WordProcessor(self.wordList)
+        self.wordProcessor = WordProcessor(self.wordList, [])
 
 
 class Test_WordProcessor__checkResults(WordProcessorTests):
@@ -26,37 +26,40 @@ class Test_WordProcessor__checkResults(WordProcessorTests):
         self.assertEqual(5, allCalls.call_count)
 
     def test_absent_letter(self):
-        self.wordProcessor._latestResult = [
+        self.wordProcessor._results = [
             MagicMock(result="absent"), MagicMock(result="absent"), MagicMock(result="absent"),
             MagicMock(result="absent"), MagicMock(result="absent")
         ]
 
         self.wordProcessor._checkResults()
 
-        self.checkCall(self.wordProcessor._correctLetter, self.wordProcessor._presentLetter, self.wordProcessor._absentLetter)
-        self.assertEqual(0, self.wordProcessor.totalCorrectLetters)
+        self.checkCall(
+            self.wordProcessor._correctLetter, self.wordProcessor._presentLetter, self.wordProcessor._absentLetter
+        )
 
     def test_present_letter(self):
-        self.wordProcessor._latestResult = [
+        self.wordProcessor._results = [
             MagicMock(result="present"), MagicMock(result="present"), MagicMock(result="present"),
             MagicMock(result="present"), MagicMock(result="present")
         ]
 
         self.wordProcessor._checkResults()
 
-        self.checkCall(self.wordProcessor._correctLetter, self.wordProcessor._absentLetter, self.wordProcessor._presentLetter)
-        self.assertEqual(0, self.wordProcessor.totalCorrectLetters)
+        self.checkCall(
+            self.wordProcessor._correctLetter, self.wordProcessor._absentLetter, self.wordProcessor._presentLetter
+        )
 
     def test_correct_letter(self):
-        self.wordProcessor._latestResult = [
+        self.wordProcessor._results = [
             MagicMock(result="correct"), MagicMock(result="correct"), MagicMock(result="correct"),
             MagicMock(result="correct"), MagicMock(result="correct")
         ]
 
         self.wordProcessor._checkResults()
 
-        self.checkCall(self.wordProcessor._absentLetter, self.wordProcessor._presentLetter, self.wordProcessor._correctLetter)
-        self.assertEqual(5, self.wordProcessor.totalCorrectLetters)
+        self.checkCall(
+            self.wordProcessor._absentLetter, self.wordProcessor._presentLetter, self.wordProcessor._correctLetter
+        )
 
 
 class Test_WordProcessor__doubleLetterCheck(WordProcessorTests):
@@ -81,12 +84,7 @@ class Test_WordProcessor__doubleLetterCheck(WordProcessorTests):
         self.assertEqual(set(), self.wordProcessor.wordsToRemove)
 
 
-class Test_WordProcessor__absentLetter(TestCase):
-
-    def setUp(self):
-        self.wordList = MagicMock()
-        self.wordList.wordList = ["apple", "juice", "uncle"]
-        self.wordProcessor = WordProcessor(self.wordList)
+class Test_WordProcessor__absentLetter(WordProcessorTests):
 
     def test_not_already_seen_in_word(self):
         self.wordProcessor._alreadySeenBeforeInWord = MagicMock(return_value=False)
@@ -137,8 +135,9 @@ class Test_WordProcessor__reduceWordList(WordProcessorTests):
         self.wordProcessor._reduceWordList()
 
         self.wordList.removeWord.assert_has_calls(
-            [call("audio"), call("juice"), call("tests")], True
+            [call("audio"), call("juice")], True
         )
+        self.assertEqual(set(), self.wordProcessor.wordsToRemove)
 
 
 class Test_WordProcessor_addCorrectLetterWordToSet(WordProcessorTests):
@@ -158,3 +157,26 @@ class Test_WordProcessor_addCorrectLetterWordToSet(WordProcessorTests):
 
         self.assertEqual({"a"}, self.wordProcessor._presentOrCorrectLetters)
         self.assertEqual(set(), self.wordProcessor._doubleLetter)
+
+
+class Test_WordProcessor_checkWon(WordProcessorTests):
+
+    def test_won(self):
+        self.wordProcessor._results = [
+            MagicMock(result="correct"), MagicMock(result="correct"), MagicMock(result="correct"),
+            MagicMock(result="correct"), MagicMock(result="correct")
+        ]
+
+        won = self.wordProcessor.checkWon()
+
+        self.assertTrue(won)
+
+    def test_lost(self):
+        self.wordProcessor._results = [
+            MagicMock(result="absent"), MagicMock(result="present"), MagicMock(result="correct"),
+            MagicMock(result="present"), MagicMock(result="correct")
+        ]
+
+        won = self.wordProcessor.checkWon()
+
+        self.assertFalse(won)
