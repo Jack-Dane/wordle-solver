@@ -24,8 +24,8 @@ class WordProcessor:
         """
         # TODO not make it dependent on passing correct letters first
         self._guessWord = guessWord
+        self._wordList.removeWord(self._guessWord)
         self._checkResults()
-        self._reduceWordList()
 
     def checkWon(self):
         return len(
@@ -43,7 +43,10 @@ class WordProcessor:
                 self._presentLetter(letterResult.index, letterResult.letter)
             else:
                 self._correctLetter(letterResult.index, letterResult.letter)
+            self._reduceWordList()
+
         self._doubleLetterCheck()
+        self._reduceWordList()
 
     def _doubleLetterCheck(self):
         """
@@ -111,9 +114,9 @@ class WordProcessor:
         """
         Remove the words in words to remove from the wordlist
         """
-        self.wordsToRemove.add(self._guessWord)
         for word in self.wordsToRemove:
             self._wordList.removeWord(word)
+        self.wordsToRemove = set()
 
     def addCorrectLetterWordToSet(self, letter):
         """
