@@ -1,4 +1,7 @@
 
+from wordle.common.letterResult import LetterValue
+
+
 def presentCorrectLetter(presentCorrectFunc):
     def addElementsToList(model, index, letter):
         model.addCorrectLetterWordToSet(letter)
@@ -29,7 +32,10 @@ class WordProcessor:
 
     def checkWon(self):
         return len(
-            [letterResult for letterResult in self._results if letterResult.result == "correct"]
+            [
+                letterResult for letterResult in self._results if
+                letterResult.result == LetterValue.CORRECT
+            ]
         ) == len(self._results)
 
     def _checkResults(self):
@@ -37,9 +43,9 @@ class WordProcessor:
         Check each result object to see then reduce the wordlist
         """
         for letterResult in self._results:
-            if letterResult.result == "absent":
+            if letterResult.result == LetterValue.ABSENT:
                 self._absentLetter(letterResult.index, letterResult.letter)
-            elif letterResult.result == "present":
+            elif letterResult.result == LetterValue.PRESENT:
                 self._presentLetter(letterResult.index, letterResult.letter)
             else:
                 self._correctLetter(letterResult.index, letterResult.letter)

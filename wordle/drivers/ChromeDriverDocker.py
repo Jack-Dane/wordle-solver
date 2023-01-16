@@ -10,7 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
-from wordle.common.letterResult import LetterResult
+from wordle.common.letterResult import LetterResult, LetterValue
 from wordle.vnc.VNCViewer import VNCViewer
 
 
@@ -143,8 +143,8 @@ class _ChromeDriver:
         result = []
         for index in range(guessNumber * 5, guessNumber * 5 + 5):
             letter, evaluation = self._getEvaluation(index)
-            letterResult = LetterResult(letter, evaluation, index % 5)
-            if evaluation == "correct":
+            letterResult = LetterResult(letter, LetterValue.fromString(evaluation), index % 5)
+            if evaluation == LetterValue.CORRECT:
                 result.insert(0, letterResult)
             else:
                 result.append(letterResult)

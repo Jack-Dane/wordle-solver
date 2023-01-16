@@ -5,8 +5,10 @@ from unittest.mock import MagicMock, patch, call
 from requests.exceptions import ConnectionError
 
 from wordle.drivers.ChromeDriverDocker import (
-    ChromeDriverDocker, _ChromeDriver, _SeleniumDocker, FailedToStartSeleniumException
+    _ChromeDriver, _SeleniumDocker, FailedToStartSeleniumException
 )
+from wordle.common.letterResult import LetterValue
+
 
 class SeleniumDockerTest(TestCase):
 
@@ -103,21 +105,21 @@ class Test__ChromeDriver_collectResults(ChromeDriverTest):
 
         self.assertEqual(
             [
-                call("b", "present", 0),
-                call("a", "correct", 1),
-                call("c", "absent", 2),
-                call("e", "present", 3),
-                call("f", "correct", 4)
+                call("b", LetterValue.PRESENT, 0),
+                call("a", LetterValue.CORRECT, 1),
+                call("c", LetterValue.ABSENT, 2),
+                call("e", LetterValue.PRESENT, 3),
+                call("f", LetterValue.CORRECT, 4)
             ],
             LetterResult.mock_calls
         )
         self.assertEqual(
             [
-                LetterResult("f", "correct", 4),
-                LetterResult("a", "correct", 1),
-                LetterResult("b", "present", 0),
-                LetterResult("c", "absent", 2),
-                LetterResult("e", "present", 3)
+                LetterResult("f", LetterValue.CORRECT, 4),
+                LetterResult("a", LetterValue.CORRECT, 1),
+                LetterResult("b", LetterValue.PRESENT, 0),
+                LetterResult("c", LetterValue.ABSENT, 2),
+                LetterResult("e", LetterValue.PRESENT, 3)
             ],
             results
         )

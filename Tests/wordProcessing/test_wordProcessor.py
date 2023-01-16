@@ -3,6 +3,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock, call
 
 from wordle.wordProcessing.wordProcessor import WordProcessor
+from wordle.common.letterResult import LetterValue
 
 
 class WordProcessorTests(TestCase):
@@ -27,8 +28,9 @@ class Test_WordProcessor__checkResults(WordProcessorTests):
 
     def test_absent_letter(self):
         self.wordProcessor._results = [
-            MagicMock(result="absent"), MagicMock(result="absent"), MagicMock(result="absent"),
-            MagicMock(result="absent"), MagicMock(result="absent")
+            MagicMock(result=LetterValue.ABSENT), MagicMock(result=LetterValue.ABSENT),
+            MagicMock(result=LetterValue.ABSENT), MagicMock(result=LetterValue.ABSENT),
+            MagicMock(result=LetterValue.ABSENT)
         ]
 
         self.wordProcessor._checkResults()
@@ -39,8 +41,9 @@ class Test_WordProcessor__checkResults(WordProcessorTests):
 
     def test_present_letter(self):
         self.wordProcessor._results = [
-            MagicMock(result="present"), MagicMock(result="present"), MagicMock(result="present"),
-            MagicMock(result="present"), MagicMock(result="present")
+            MagicMock(result=LetterValue.PRESENT), MagicMock(result=LetterValue.PRESENT),
+            MagicMock(result=LetterValue.PRESENT), MagicMock(result=LetterValue.PRESENT),
+            MagicMock(result=LetterValue.PRESENT)
         ]
 
         self.wordProcessor._checkResults()
@@ -51,8 +54,9 @@ class Test_WordProcessor__checkResults(WordProcessorTests):
 
     def test_correct_letter(self):
         self.wordProcessor._results = [
-            MagicMock(result="correct"), MagicMock(result="correct"), MagicMock(result="correct"),
-            MagicMock(result="correct"), MagicMock(result="correct")
+            MagicMock(result=LetterValue.CORRECT), MagicMock(result=LetterValue.CORRECT),
+            MagicMock(result=LetterValue.CORRECT), MagicMock(result=LetterValue.CORRECT),
+            MagicMock(result=LetterValue.CORRECT)
         ]
 
         self.wordProcessor._checkResults()
@@ -163,8 +167,9 @@ class Test_WordProcessor_checkWon(WordProcessorTests):
 
     def test_won(self):
         self.wordProcessor._results = [
-            MagicMock(result="correct"), MagicMock(result="correct"), MagicMock(result="correct"),
-            MagicMock(result="correct"), MagicMock(result="correct")
+            MagicMock(result=LetterValue.CORRECT), MagicMock(result=LetterValue.CORRECT),
+            MagicMock(result=LetterValue.CORRECT), MagicMock(result=LetterValue.CORRECT),
+            MagicMock(result=LetterValue.CORRECT)
         ]
 
         won = self.wordProcessor.checkWon()
@@ -173,8 +178,9 @@ class Test_WordProcessor_checkWon(WordProcessorTests):
 
     def test_lost(self):
         self.wordProcessor._results = [
-            MagicMock(result="absent"), MagicMock(result="present"), MagicMock(result="correct"),
-            MagicMock(result="present"), MagicMock(result="correct")
+            MagicMock(result=LetterValue.ABSENT), MagicMock(result=LetterValue.PRESENT),
+            MagicMock(result=LetterValue.CORRECT), MagicMock(result=LetterValue.ABSENT),
+            MagicMock(result=LetterValue.CORRECT)
         ]
 
         won = self.wordProcessor.checkWon()

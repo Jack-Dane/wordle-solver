@@ -52,7 +52,7 @@ class Test_Wordle__run(WordleTest):
         self.wordle.nextGuess = "crane"
 
     def test_stop_correct_answer(self, wordProcessor):
-        wordProcessor.return_value = MagicMock(totalCorrectLetters=5)
+        wordProcessor.return_value.checkWon.return_value = True
 
         self.wordle._run()
 
@@ -61,17 +61,17 @@ class Test_Wordle__run(WordleTest):
         self.assertTrue(self.wordle.correctAnswer)
 
     def test_max_guesses_reached(self, wordProcessor):
+        wordProcessor.return_value.checkWon.return_value = False
+
         self.wordle._run()
 
         self.assertEqual(6, self.wordle.driver.makeGuess.call_count)
         self.assertEqual(6, self.wordle.guesses)
-        self.assertEqual("UNKNOWN", self.wordle.correctAnswer)
+        self.assertEqual(None, self.wordle.correctAnswer)
 
     def test_correct_on_third_attempt(self, wordProcessor):
-        wordProcessor.side_effect = [
-            MagicMock(totalCorrectLetters=0),
-            MagicMock(totalCorrectLetters=4),
-            MagicMock(totalCorrectLetters=5)
+        wordProcessor.return_value.checkWon.side_effect = [
+            False, False, True
         ]
 
         self.wordle._run()
