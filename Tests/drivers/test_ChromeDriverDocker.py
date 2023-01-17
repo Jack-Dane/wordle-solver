@@ -7,7 +7,7 @@ from requests.exceptions import ConnectionError
 from wordle.drivers.ChromeDriverDocker import (
     _ChromeDriver, _SeleniumDocker, FailedToStartSeleniumException
 )
-from wordle.common.letterResult import LetterValue
+from wordle.common.letterResult import LetterValue, LetterResult
 
 
 class SeleniumDockerTest(TestCase):
@@ -87,7 +87,6 @@ class ChromeDriverTest(TestCase):
             self.chromeDriver = _ChromeDriver(MagicMock(host="localhost", driverPort=4444))
 
 
-@patch("wordle.drivers.ChromeDriverDocker.LetterResult")
 @patch.object(_ChromeDriver, "_getEvaluation")
 class Test__ChromeDriver_collectResults(ChromeDriverTest):
 
@@ -96,23 +95,13 @@ class Test__ChromeDriver_collectResults(ChromeDriverTest):
         result.get_attribute.return_value = evaluation
         return result
 
-    def test_ok(self, _ChromeDriver_getEvaluation, LetterResult):
+    def test_ok(self, _ChromeDriver_getEvaluation):
         _ChromeDriver_getEvaluation.side_effect = [
             ("b", "present"), ("a", "correct"), ("c", "absent"), ("e", "present"), ("f", "correct")
         ]
 
         results = self.chromeDriver.collectResults(0)
 
-        self.assertEqual(
-            [
-                call("b", LetterValue.PRESENT, 0),
-                call("a", LetterValue.CORRECT, 1),
-                call("c", LetterValue.ABSENT, 2),
-                call("e", LetterValue.PRESENT, 3),
-                call("f", LetterValue.CORRECT, 4)
-            ],
-            LetterResult.mock_calls
-        )
         self.assertEqual(
             [
                 LetterResult("f", LetterValue.CORRECT, 4),

@@ -144,7 +144,15 @@ class _ChromeDriver:
         for index in range(guessNumber * 5, guessNumber * 5 + 5):
             letter, evaluation = self._getEvaluation(index)
             letterResult = LetterResult(letter, LetterValue.fromString(evaluation), index % 5)
-            if evaluation == LetterValue.CORRECT:
+            if letterResult.result == LetterValue.CORRECT:
+                # Correct letters need to go first when being returned for easier processing.
+                # A correct letter will always be in the correct place and present.
+                # If an absent letter was recorded at index 0 but the same correct letter was at index 3.
+                # We need to pass the correct letter first rather than read index 0 first and assume that the word
+                # doesn't have that letter in it.
+                # EG: guess word: zoppa correct word: adopt
+                # without putting correct letters first, the processor assumes that there isn't a p as the first guessed
+                # p is absent.
                 result.insert(0, letterResult)
             else:
                 result.append(letterResult)
@@ -163,6 +171,7 @@ class ChromeDriverDocker(_ChromeDriver):
     def __init__(self, vnc):
         self._seleniumDocker = _SeleniumDocker()
         self._seleniumDocker.run()
+        self._vnc = None
         if vnc:
             self._vnc = VNCViewer()
         super().__init__(self._seleniumDocker)
@@ -171,5 +180,6 @@ class ChromeDriverDocker(_ChromeDriver):
     def kill(self):
         """ clean up processes created by this object
         """
-        self._vnc.kill()
+        if self._vnc:
+            self._vnc.kill()
         self._seleniumDocker.remove()
