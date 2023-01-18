@@ -1,6 +1,7 @@
 
 import os
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, create_engine, insert
+
+from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import declarative_base, Session
 
 Base = declarative_base()

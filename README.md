@@ -6,7 +6,7 @@ A web driver application that will solve Wordle.
 2. Change into the created directory `cd wordle-solver`
 3. Create a new virtual environment for the project `python3 -m venv venv`
 4. Use the new created virtual environment `source venv/bin/activate`
-5. Install the relevant packages `pip install -e .`
+5. Install the relevant packages `pip install -r requirements.txt`
 
 ## Example
 ![Wordle](assets/wordle.gif)

@@ -8,6 +8,8 @@ setup(
         "sqlalchemy",
         "docker",
         "requests",
+        "sqlalchemy",
+        "pysocks",
     ],
     packages=find_packages(),
     entry_points={
