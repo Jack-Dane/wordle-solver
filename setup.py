@@ -17,5 +17,11 @@ setup(
             "wordleRun=wordle.main:main",
             "createTables=wordle.models.results:createTables"
         ]
+    },
+    package_data={
+        "wordle": [
+            "vnc/config.vnc",
+            "wordProcessing/wordleList.txt"
+        ]
     }
 )
