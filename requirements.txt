@@ -19,5 +19,5 @@ trio==0.22.0
 trio-websocket==0.9.2
 urllib3==1.26.14
 websocket-client==1.4.2
-git+ssh://git@github.com/Jack-Dane/worlde-solver.git@32b12be9cc1b719fec0ae65cad2986bbc934ca49#egg=wordle
+git+ssh://git@github.com/Jack-Dane/worlde-solver.git@511ca56bb4f1299fc585d19f0ea743e72731a248#egg=wordle
 wsproto==1.2.0
