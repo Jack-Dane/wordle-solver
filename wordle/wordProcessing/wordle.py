@@ -8,6 +8,7 @@ from wordle.wordProcessing.wordProcessor import WordProcessor
 from wordle.drivers.ChromeDriverDocker import ChromeDriverDocker
 from wordle.wordProcessing.wordList import WordList
 from wordle.models.results import insertResult
+from wordle.output import ConsolePrinter
 
 
 class Wordle:
@@ -27,6 +28,7 @@ class Wordle:
         self._startDateTime = datetime.now()
         self.driver = ChromeDriverDocker(vnc)
         try:
+            ConsolePrinter.printHeader()
             if cheat:
                 self._runCheat()
             else:
@@ -47,11 +49,13 @@ class Wordle:
             wordProcessor = WordProcessor(self._wordList, results)
 
             if wordProcessor.checkWon():
+                ConsolePrinter.printResults(results, 0)
                 self.correctAnswer = self.nextGuess
                 self.guesses += 1
                 break
 
             wordProcessor.processResults(self.nextGuess)
+            ConsolePrinter.printResults(results, len(self._wordList.wordList))
             self.nextGuess = wordProcessor.getNextGuess()
             self.guesses += 1
         if self._logResults:
@@ -71,3 +75,5 @@ class Wordle:
         response = requests.get(solutionURL)
         correctAnswer = response.json()["solution"]
         self.driver.makeGuess(correctAnswer)
+        results = self.driver.collectResults(self.guesses)
+        ConsolePrinter.printResults(results, 0)
