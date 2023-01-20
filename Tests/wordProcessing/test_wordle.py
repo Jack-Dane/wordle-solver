@@ -12,6 +12,7 @@ class WordleTest(TestCase):
         self.wordle = Wordle(GuessAlgorithm.GENERIC_GUESS_ALGORITHM, False)
 
 
+@patch("wordle.wordProcessing.wordle.ConsolePrinter")
 @patch("wordle.wordProcessing.wordle.ChromeDriverDocker")
 class Test_Wordle_start(WordleTest):
 
@@ -20,21 +21,21 @@ class Test_Wordle_start(WordleTest):
         self.wordle._run = MagicMock()
         self.wordle._runCheat = MagicMock()
 
-    def test_standard_start(self, ChromeDriverDocker):
+    def test_standard_start(self, ChromeDriverDocker, _ConsolePrinter):
         self.wordle.start()
 
         self.wordle._run.assert_called_once_with()
         self.wordle._runCheat.assert_not_called()
         ChromeDriverDocker.return_value.kill.assert_called_once_with()
 
-    def test_cheat_start(self, ChromeDriverDocker):
+    def test_cheat_start(self, ChromeDriverDocker, _ConsolePrinter):
         self.wordle.start(cheat=True)
 
         self.wordle._runCheat.assert_called_once_with()
         self.wordle._run.assert_not_called()
         ChromeDriverDocker.return_value.kill.assert_called_once_with()
 
-    def test_exception(self, ChromeDriverDocker):
+    def test_exception(self, ChromeDriverDocker, _ConsolePrinter):
         self.wordle._run.side_effect = Exception("Boom!")
 
         with self.assertRaises(Exception):
@@ -43,6 +44,7 @@ class Test_Wordle_start(WordleTest):
         ChromeDriverDocker.return_value.kill.assert_called_once_with()
 
 
+@patch("wordle.wordProcessing.wordle.ConsolePrinter")
 @patch("wordle.wordProcessing.wordle.WordProcessor")
 class Test_Wordle__run(WordleTest):
 
@@ -51,7 +53,7 @@ class Test_Wordle__run(WordleTest):
         self.wordle.driver = MagicMock()
         self.wordle.nextGuess = "crane"
 
-    def test_stop_correct_answer(self, wordProcessor):
+    def test_stop_correct_answer(self, wordProcessor, _ConsolePrinter):
         wordProcessor.return_value.checkWon.return_value = True
 
         self.wordle._run()
@@ -60,7 +62,7 @@ class Test_Wordle__run(WordleTest):
         wordProcessor.getNextGuess.assert_not_called()
         self.assertTrue(self.wordle.correctAnswer)
 
-    def test_max_guesses_reached(self, wordProcessor):
+    def test_max_guesses_reached(self, wordProcessor, _ConsolePrinter):
         wordProcessor.return_value.checkWon.return_value = False
 
         self.wordle._run()
@@ -69,7 +71,7 @@ class Test_Wordle__run(WordleTest):
         self.assertEqual(6, self.wordle.guesses)
         self.assertEqual(None, self.wordle.correctAnswer)
 
-    def test_correct_on_third_attempt(self, wordProcessor):
+    def test_correct_on_third_attempt(self, wordProcessor, _ConsolePrinter):
         wordProcessor.return_value.checkWon.side_effect = [
             False, False, True
         ]
@@ -81,6 +83,7 @@ class Test_Wordle__run(WordleTest):
         self.assertTrue(self.wordle.correctAnswer)
 
 
+@patch("wordle.wordProcessing.wordle.ConsolePrinter")
 @patch("wordle.wordProcessing.wordle.date")
 @patch("wordle.wordProcessing.wordle.requests")
 class Test_Wordle__runCheat(WordleTest):
@@ -89,7 +92,7 @@ class Test_Wordle__runCheat(WordleTest):
         super(Test_Wordle__runCheat, self).setUp()
         self.wordle.driver = MagicMock()
 
-    def test_ok(self, requests, date):
+    def test_ok(self, requests, date, _ConsolePrinter):
         requests.get.return_value = MagicMock()
         requests.get.return_value.json.return_value = {
             "solution": "chant"
