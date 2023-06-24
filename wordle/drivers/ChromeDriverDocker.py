@@ -19,7 +19,7 @@ class FailedToStartSeleniumException(Exception):
 
 
 class _SeleniumDocker:
-    _SELENIUM_IMAGE_NAME = "selenium/standalone-chrome"
+    _SELENIUM_IMAGE_NAME = "selenium/standalone-chrome:114.0"
 
     def __init__(self):
         self._container = None

@@ -25,7 +25,7 @@ class Test__SeleniumDocker__createContainer(SeleniumDockerTest):
         self.driverDocker._createContainer()
 
         self.dockerEnvMock.containers.run.assert_called_once_with(
-            "selenium/standalone-chrome",
+            "selenium/standalone-chrome:114.0",
             ports={
                 "4444": 4444,
                 "7900": 7900,
