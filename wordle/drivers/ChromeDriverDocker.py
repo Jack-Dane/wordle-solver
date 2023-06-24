@@ -93,12 +93,19 @@ class _ChromeDriver:
         self.driver.get("https://www.nytimes.com/games/wordle/index.html")
         self.driver.maximize_window()
         self.closeCookiesNotification()
+        self._clickPlay()
         self.closeModalDialog()
 
     def _waitForElement(self, selector, timeout=10):
         return WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(selector)
         )
+
+    def _clickPlay(self):
+        playButton = self._waitForElement(
+            (By.XPATH, "//button[@data-testid='Play']")
+        )
+        playButton.click()
 
     def closeModalDialog(self):
         modalDialogXpath = "//button[@class='Modal-module_closeIcon__TcEKb']/*[name()='svg']"
