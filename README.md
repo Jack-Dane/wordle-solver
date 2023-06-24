@@ -1,3 +1,5 @@
+![Tests](https://github.com/Jack-Dane/wordle-solver/actions/workflows/run-tests.yml/badge.svg)
+
 # wordle-solver
 A web driver application that will solve Wordle. 
 
