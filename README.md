@@ -1,6 +1,10 @@
 # wordle-solver
 A web driver application that will solve Wordle. 
 
+## Prerequisite
+* Has only been tested on a linux machine. 
+* Needs to have vinagre installed. `apt install vinagre`
+
 ## How to setup
 1. Clone the repository `git clone git@github.com:Jack-Dane/worlde-solver.git`
 2. Change into the created directory `cd wordle-solver`
